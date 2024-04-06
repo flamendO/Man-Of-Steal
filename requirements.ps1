@@ -6,7 +6,6 @@ pip install pycryptodome
 pip install pycryptodomex
 pip install requests
 pip install urllib3
-pip install winshell
 
 (Get-Content -Path "./src/dist/flags.txt" -Raw) -replace "(?m)^(.*\r?\n)(.*)$", "`${1}1" | Set-Content -Path "./src/dist/flags.txt"
 
